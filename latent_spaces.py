@@ -52,16 +52,16 @@ class ProductLatentSpace(LatentSpace):
     def __init__(self, spaces: List[LatentSpace]):
         self.spaces = spaces
 
-    def sample_conditional(self, z, size, **kwargs):
+    def sample_conditional(self, z, std, size, **kwargs):
         x = []
         n = 0
-        for s in self.spaces:
+        for i, s in enumerate(self.spaces):
             if len(z.shape) == 1:
                 z_s = z[n : n + s.space.n]
             else:
                 z_s = z[:, n : n + s.space.n]
             n += s.space.n
-            x.append(s.sample_conditional(z=z_s, size=size, **kwargs))
+            x.append(s.sample_conditional(mean=z_s, std=std[i], size=size, **kwargs))
 
         return torch.cat(x, -1)
 
@@ -69,6 +69,37 @@ class ProductLatentSpace(LatentSpace):
         x = [s.sample_marginal(size=size, **kwargs) for s in self.spaces]
 
         return torch.cat(x, -1)
+
+    def sample_marginal_causal(self, std, size, first_content, **kwargs):
+        x = [s.sample_marginal(torch.as_tensor([0.0]),torch.as_tensor([0.0]), size=size, **kwargs) for i, s in enumerate(self.spaces)]
+        final_x = []
+        for i, s in enumerate(self.spaces):
+            if i==1 and std[i] is not None:
+                if first_content:
+                    final_x.append(s.sample_marginal(x[-4],std[i]))
+                else:
+                    final_x.append(s.sample_marginal(x[-2],std[i]))
+            elif i==6 and std[i] is not None:
+                if first_content:
+                    final_x.append(s.sample_marginal(x[1],std[i]))
+                else:
+                    final_x.append(s.sample_marginal(x[-2],std[i]))
+            elif i==8 and std[i] is not None:
+                if first_content:
+                    final_x.append(s.sample_marginal(x[-4],std[i]))
+                else:
+                    final_x.append(s.sample_marginal(x[1],std[i]))
+            elif i in (0,2,3,4,5,7,9): final_x.append(x[i])
+
+        final_final_x = []
+        for i, s in enumerate(self.spaces):
+
+            if i==0 and std[i] is not None: final_final_x.append(s.sample_marginal(x[1],std[i]))
+            elif i==5 and std[i] is not None:final_final_x.append(s.sample_marginal(x[-4],std[i]))
+            elif i==7 and std[i] is not None:final_final_x.append(s.sample_marginal(x[-2],std[i]))
+            elif i in (1,2,3,4,6,8,9): final_x.append(x[i])
+
+        return torch.cat(final_final_x, -1)
 
     @property
     def dim(self):

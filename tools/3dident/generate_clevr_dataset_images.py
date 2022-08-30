@@ -1,5 +1,7 @@
 """Generate image renderings for 3DIdent dataset."""
-
+import sys
+sys.path.append('.')
+sys.path.append('../../')
 import os
 import numpy as np
 import argparse
@@ -10,6 +12,7 @@ import site
 
 
 def main(args):
+    print('This is my arguments ',args)
     args.output_folder = pathlib.Path(args.output_folder).absolute()
 
     latents_path = os.path.join(args.output_folder, "latents.npy")
@@ -23,13 +26,18 @@ def main(args):
         args.material_names = ["Rubber"] * ((latents.shape[1] - 1) // 8)
     if args.shape_names is None:
         args.shape_names = ["Teapot"] * ((latents.shape[1] - 1) // 8)
+    if len(args.material_names) == 1:
+        args.material_names = args.material_names * ((latents.shape[1] - 1) // 8)
 
     assert len(args.material_names) == (latents.shape[1] - 1) // 8
 
     indices = np.array_split(np.arange(n_samples), args.n_batches)[args.batch_index]
+
     print(f"Rendering samples in range: {min(indices)} - {max(indices)}")
 
     output_image_folder = os.path.join(args.output_folder, "images")
+
+    print(args)
 
     initialize_renderer(
         args.shape_names,
@@ -39,23 +47,32 @@ def main(args):
         use_gpu=args.use_gpu,
     )
 
+    print('out of initialisation')
+
     for i, idx in enumerate(indices):
         output_filename = os.path.join(
             output_image_folder,
-            f"{str(idx).zfill(int(np.ceil(np.log10(n_samples))))}.png",
+            f"{str(idx).zfill(6)}.png",
         )
         if os.path.exists(output_filename):
             print("Skipped file", output_filename)
             continue
 
         current_latents = latents[idx]
+
+        if args.multimodal:
+            modality = args.modality
+
+        print('getting into rendering')
         render_sample(
             current_latents,
             args.material_names,
             not args.no_spotlights,
             output_filename,
             args.save_scene,
+            modality=modality if args.multimodal else None
         )
+        print('done with rendering')
 
 
 def initialize_renderer(
@@ -255,17 +272,24 @@ def update_objects_and_lights(latents, material_names, update_lights):
 
         # update object location and rotation
         object = bpy.data.objects[object_name]
+        print("Inside",max_object_size,object_latents[2])
         object.location = (
             object_latents[0],
             object_latents[1],
             object_latents[2] + max_object_size / 2,
         )
+
         object.rotation_euler = tuple(object_latents[3:6])
 
         # update object color
         rgba_object = colorsys.hsv_to_rgb(
-            object_latents[7] / (2.0 * np.pi), 1.0, 1.0
-        ) + (1.0,)
+            object_latents[7] / (2.0 * np.pi), 1.0, 1.0,
+        ) + (1.0,)    # 1.0, 1.0
+
+
+        print("location of the object",object.location)
+
+
         render_utils.change_material(
             bpy.data.objects[object_name].data.materials[-1], Color=rgba_object
         )
@@ -282,8 +306,23 @@ def update_objects_and_lights(latents, material_names, update_lights):
             )
 
 
-def render_sample(latents, material_names, include_lights, output_filename, save_scene):
+def render_sample(latents, material_names, include_lights, output_filename, save_scene, modality):
     """Update the scene based on the latents and render the scene and save as an image."""
+
+    if modality is not None:
+        if modality == 0:
+            saturation = 0.6
+            value = 1.0
+        elif modality == 1:
+            saturation = 0.6
+            value = 1.0
+            print("this",latents[9],2.0*np.pi)
+            latents[9] = latents[9]*(-1)
+            latents[7] = latents[7]*(-1)
+            print("becam",latents[9])
+    else:
+        saturation = 0.6
+        value = 1.0
 
     # set output path
     bpy.context.scene.render.filepath = output_filename
@@ -291,11 +330,11 @@ def render_sample(latents, material_names, include_lights, output_filename, save
     # set objects and lights
     update_objects_and_lights(latents, material_names, include_lights)
 
-    rgba_background = colorsys.hsv_to_rgb(latents[9] / (2.0 * np.pi), 0.60, 1.0) + (
+    rgba_background = colorsys.hsv_to_rgb(latents[9] / (2.0 * np.pi), saturation, value) + (
         1.0,
-    )
+    )   # 0.6, 1.0
     render_utils.change_material(
-        bpy.data.objects["Ground"].data.materials[-1], Color=rgba_background
+        bpy.data.objects["Ground"].data.materials[-1], Color=rgba_background,
     )
 
     # set scene background
@@ -330,14 +369,17 @@ if __name__ == "__main__":
                 sys.exit(1)
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output-folder", required=True, type=str)
-    parser.add_argument("--n-batches", required=True, type=int)
-    parser.add_argument("--batch-index", required=True, type=int)
+    parser.add_argument("--output-folder", required=True,type=str)
+    parser.add_argument("--n-batches", default=100,type=int)
+    parser.add_argument("--batch-index", default=0, type=int)
     parser.add_argument("--no-spotlights", action="store_true")
     parser.add_argument("--use-gpu", action="store_true")
     parser.add_argument("--material-names", nargs="+", type=str)
     parser.add_argument("--shape-names", nargs="+", type=str)
     parser.add_argument("--save-scene", action="store_true")
+    parser.add_argument("--multimodal", action="store_true")
+    parser.add_argument("--modality", default=0, type=int)
+    parser.add_argument("--no_range_change",action="store_true")
 
     if INSIDE_BLENDER:
         # Run normally

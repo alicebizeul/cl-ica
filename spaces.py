@@ -5,6 +5,7 @@ import torch
 import numpy as np
 import vmf
 import spaces_utils as sut
+from scipy.stats import wishart, truncnorm
 
 
 class Space(ABC):
@@ -270,6 +271,9 @@ class NBoxSpace(Space):
     def dim(self):
         return self.n
 
+    def delta(self, size, device="cpu"):
+        return (0.0*torch.rand(size=(size, self.n), device=device))
+
     def uniform(self, size, device="cpu"):
         return (
             torch.rand(size=(size, self.n), device=device) * (self.max_ - self.min_)
@@ -300,6 +304,32 @@ class NBoxSpace(Space):
         )
 
         return values.view((size, self.n))
+    
+    def trunc_normal(self, mean, std, size, device="cpu", change_prob=1., statistical_dependence=False):
+        """Sample from a Normal distribution in R^N and then restrict the samples to a box.
+
+        Args:
+            mean: Value(s) to sample around.
+            std: Concentration parameter of the distribution (=standard deviation).
+            size: Number of samples to draw.
+            device: torch device identifier
+        """
+
+        assert len(mean.shape) == 1 or (len(mean.shape) == 2 and len(mean) == size)
+
+        assert mean.shape[-1] == self.n
+
+        if len(mean.shape) == 1:
+            mean = mean.unsqueeze(0)
+
+        mean = mean.to(device)
+        mean_np = mean.detach().cpu().numpy()
+        a = (self.min_ - mean_np) / std
+        b = (self.max_ - mean_np) / std
+        unnormalised_samples = truncnorm.rvs(a, b, size=(size, self.n))
+        print(std,mean_np)
+        samples = torch.FloatTensor(std * unnormalised_samples + mean_np, device=device)
+        return samples
 
     def laplace(self, mean, lbd, size, device="cpu"):
         """Sample from a Laplace distribution in R^N and then restrict the samples to a box.
