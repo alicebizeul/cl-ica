@@ -31,6 +31,8 @@ def main():
     parser.add_argument("--debug",action="store_true")
     parser.add_argument("--debug2",action="store_true")
     parser.add_argument("--first_content", action="store_true")
+    parser.add_argument("--strength_dependencies",default=0.5,type=float)
+    parser.add_argument("--std",default=1.0,type=float)
 
     args = parser.parse_args()
 
@@ -128,7 +130,7 @@ def main():
                         ),
                         latent_spaces.LatentSpace(
                             spaces.NBoxSpace(1),
-                            lambda space, mean, std, size, device: space.trunc_normal(size, device=device),
+                            lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device=device),
                             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
                         ),
                         # spotlight position
@@ -166,12 +168,12 @@ def main():
                         ),
                         latent_spaces.LatentSpace(
                             spaces.NBoxSpace(1),
-                            lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device=device),
+                            lambda space, mean, std, size, device: space.uniform(size, device=device),
                             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
                         ),
                         latent_spaces.LatentSpace(
                             spaces.NBoxSpace(1),
-                            lambda space, mean, std, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device=device),
                             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
                         ),
                         # Rotations
@@ -267,12 +269,12 @@ def main():
                         ),
                         latent_spaces.LatentSpace(
                             spaces.NBoxSpace(1),
-                            lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device=device),
+                            lambda space, mean, std, size, device: space.uniform(size, device=device),
                             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
                         ),
                         latent_spaces.LatentSpace(
                             spaces.NBoxSpace(1),
-                            lambda space, mean, std, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device=device),
                             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
                         ),
                     ]
@@ -384,12 +386,12 @@ def main():
                         ),
                         latent_spaces.LatentSpace(
                             spaces.NBoxSpace(1),
-                            lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device=device),
+                            lambda space, mean, std, size, device: space.uniform(size, device=device),
                             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
                         ),
                         latent_spaces.LatentSpace(
                             spaces.NBoxSpace(1),
-                            lambda space, mean, std, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device=device),
                             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
                         ),
                     ]
@@ -404,12 +406,12 @@ def main():
                         ),
                         latent_spaces.LatentSpace(
                             spaces.NBoxSpace(1),
-                            lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device=device),
+                            lambda space, mean, std, size, device: space.uniform(size, device=device),
                             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
                         ),
                         latent_spaces.LatentSpace(
                             spaces.NBoxSpace(1),
-                            lambda space, mean, std, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device=device),
                             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
                         ),
                         latent_spaces.LatentSpace(
@@ -613,45 +615,46 @@ def main():
 
         elif args.multimodal and args.all_hues:
             if args.first_content:
-                raw_latents_view1 = s.sample_marginal_causal([1.0,None,None,None,None,1.0,1.0,None,None,None],int(args.n_points/2), device="cpu",first_content=args.first_content)
-                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[0.0,0.0,0.0,1.0,None,1.0,1.0,None,None,None], size=int(args.n_points/2), device="cpu").numpy()
+                raw_latents_view1 = s.sample_marginal_causal([args.strength_dependencies,None,None,None,None,args.strength_dependencies,args.strength_dependencies,None,None,None],int(args.n_points/2), device="cpu",ms="hues")
+                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[0.0,0.0,0.0,args.std,None,args.std,args.std,None,None,None], size=int(args.n_points/2), device="cpu").numpy()
                 raw_latents_view1 = raw_latents_view1.numpy()
                 raw_latents = np.append(raw_latents_view1,raw_latents_view2,0)
             else:
-                raw_latents_view1 = s.sample_marginal_causal([1.0,1.0,None,None,None,1.0,None,None,None,None],int(args.n_points/2), device="cpu",first_content=args.first_content)
-                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[1.0,1.0,1.0,0.0,None,0.0,0.0,None,None,None], size=int(args.n_points/2), device="cpu").numpy()
+                raw_latents_view1 = s.sample_marginal_causal([args.strength_dependencies,None,args.strength_dependencies,None,None,args.strength_dependencies,None,None,None,None],int(args.n_points/2), device="cpu",ms="hues")
+                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[args.std,args.std,args.std,0.0,None,0.0,0.0,None,None,None], size=int(args.n_points/2), device="cpu").numpy()
                 raw_latents_view1 = raw_latents_view1.numpy()
+                print(raw_latents_view1.shape,raw_latents_view2.shape)
                 raw_latents = np.append(raw_latents_view1,raw_latents_view2,0)
 
 
         elif args.multimodal and args.all_positions:
             if args.first_content:
-                raw_latents_view1 = s.sample_marginal_causal([None,None,None,None,None,1.0,None,1.0,1.0,None],int(args.n_points/2), device="cpu",first_content=args.first_content)
-                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[None,None,None,0.0,None,0.0,0.0,1.0,1.0,1.0], size=int(args.n_points/2), device="cpu").numpy()
+                raw_latents_view1 = s.sample_marginal_causal([None,None,None,None,None,args.strength_dependencies,None,args.strength_dependencies,None,args.strength_dependencies],int(args.n_points/2), device="cpu",ms="positions")
+                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[None,None,None,0.0,None,0.0,0.0,args.std,args.std,args.std], size=int(args.n_points/2), device="cpu").numpy()
                 raw_latents_view1 = raw_latents_view1.numpy()
                 raw_latents = np.append(raw_latents_view1,raw_latents_view2,0)
             else:
-                raw_latents_view1 = s.sample_marginal_causal([None,None,None,None,None,1.0,1.0,1.0,None,None],int(args.n_points/2), device="cpu",first_content=args.first_content)
-                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[None,None,None,1.0,None,1.0,1.0,0.0,0.0,0.0], size=int(args.n_points/2), device="cpu").numpy()
+                raw_latents_view1 = s.sample_marginal_causal([None,None,None,None,None,args.strength_dependencies,args.strength_dependencies,args.strength_dependencies,None,None],int(args.n_points/2), device="cpu",ms="positions")
+                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[None,None,None,args.std,None,args.std,args.std,0.0,0.0,0.0], size=int(args.n_points/2), device="cpu").numpy()
                 raw_latents_view1 = raw_latents_view1.numpy()
                 raw_latents = np.append(raw_latents_view1,raw_latents_view2,0) 
 
 
         elif args.multimodal and args.all_rotations:
             if args.first_content:
-                raw_latents_view1 = s.sample_marginal_causal([1.0,None,None,None,None,None,None,1.0,1.0,None],int(args.n_points/2), device="cpu",first_content=args.first_content)
-                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[0.0,0.0,0.0,None,None,None,None,1.0,1.0,1.0], size=int(args.n_points/2), device="cpu").numpy()
+                raw_latents_view1 = s.sample_marginal_causal([args.strength_dependencies,None,None,None,None,None,None,args.strength_dependencies,None,args.strength_dependencies],int(args.n_points/2), device="cpu",ms="rotations")
+                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[0.0,0.0,0.0,None,None,None,None,args.std,args.std,args.std], size=int(args.n_points/2), device="cpu").numpy()
                 raw_latents_view1 = raw_latents_view1.numpy()
                 raw_latents = np.append(raw_latents_view1,raw_latents_view2,0)
             else:
-                raw_latents_view1 = s.sample_marginal_causal([1.0,1.0,None,None,None,None,None,1.0,None,None],int(args.n_points/2), device="cpu",first_content=args.first_content)
-                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[1.0,1.0,1.0,None,None,None,None,0.0,0.0,0.0], size=int(args.n_points/2), device="cpu").numpy()
+                raw_latents_view1 = s.sample_marginal_causal([args.strength_dependencies,None,args.strength_dependencies,None,None,None,None,args.strength_dependencies,None,None],int(args.n_points/2), device="cpu",ms="rotations")
+                raw_latents_view2 = s.sample_conditional(raw_latents_view1,[args.std,args.std,args.std,None,None,None,None,0.0,0.0,0.0], size=int(args.n_points/2), device="cpu").numpy()
                 raw_latents_view1 = raw_latents_view1.numpy()
                 raw_latents = np.append(raw_latents_view1,raw_latents_view2,0)
 
         elif args.debug:
             raw_latents_view1 = s.sample_marginal(int(args.n_points/2), device="cpu")
-            raw_latents_view2 = s.sample_conditional(raw_latents_view1,[None,None,None,None,None,0.0,0.0,1.0], size=int(args.n_points/2), device="cpu").numpy()
+            raw_latents_view2 = s.sample_conditional(raw_latents_view1,[None,None,None,None,None,0.0,0.0,args.std], size=int(args.n_points/2), device="cpu").numpy()
             raw_latents_view1 = raw_latents_view1.numpy()
             raw_latents = np.append(raw_latents_view1,raw_latents_view2,0)
         

@@ -15,7 +15,7 @@ conda activate kugelen
 cd /cluster/home/abizeul/cl-ica/tools/3dident
 DIR_DATA="/cluster/work/vogtlab/Group/abizeul/mydata_hues_firstcontent"
 
-#python generate_clevr_dataset_latents.py --output-folder "$TMPDIR/mydata" --n-points 250000 --non-periodic-rotation-and-color --deterministic --all-hues --multimodal --first_content 
+#python generate_clevr_dataset_latents.py --output-folder "$TMPDIR/mydata" --n-points 250000 --non-periodic-rotation-and-color --deterministic --all-hues --multimodal 
 #/cluster/work/grlab/projects/projects2022-identifiability/blender-2.90.1-linux64/blender -noaudio --background --python generate_clevr_dataset_images.py --use-gpu --output-folder "$TMPDIR/mydata" --n-batches 10 --batch-index 0 --material-names "MyMetal" --no_range_change
 #/cluster/work/grlab/projects/projects2022-identifiability/blender-2.90.1-linux64/blender -noaudio --background --python generate_clevr_dataset_images.py --use-gpu --output-folder "$TMPDIR/mydata" --n-batches 10 --batch-index 1 --material-names "MyMetal" --no_range_change
 #/cluster/work/grlab/projects/projects2022-identifiability/blender-2.90.1-linux64/blender -noaudio --background --python generate_clevr_dataset_images.py --use-gpu --output-folder "$TMPDIR/mydata" --n-batches 10 --batch-index 2 --material-names "MyMetal" --no_range_change
@@ -28,5 +28,5 @@ DIR_DATA="/cluster/work/vogtlab/Group/abizeul/mydata_hues_firstcontent"
 /cluster/home/abizeul/software/blender-2.90.1-linux64/blender -noaudio --background --python generate_clevr_dataset_images.py --use-gpu --output-folder ${DIR_DATA} --n-batches 10 --batch-index 9 --material-names "Rubber" --no_range_change
 
 
-zip -r "/cluster/work/vogtlab/Group/abizeul/mydata_multimodal_texture_hues_train_firstcontent.zip" "/cluster/work/vogtlab/Group/abizeul/mydata_hues_firstcontent"
-mv "/cluster/work/vogtlab/Group/abizeul/mydata_multimodal_texture_hues_train_firstcontent.zip" "/cluster/work/vogtlab/Group/abizeul/3DIdent/mydata_multimodal_texture_hues_train_firstcontent.zip"
+zip -r "/cluster/work/vogtlab/Group/abizeul/mydata_multimodal_texture_hues_train.zip" "/cluster/work/vogtlab/Group/abizeul/mydata_hues"
+mv "/cluster/work/vogtlab/Group/abizeul/mydata_multimodal_texture_hues_train.zip" "/cluster/work/vogtlab/Group/abizeul/3DIdent/mydata_multimodal_texture_hues_train.zip"
