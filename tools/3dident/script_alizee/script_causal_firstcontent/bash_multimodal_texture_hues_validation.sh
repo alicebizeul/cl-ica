@@ -20,13 +20,14 @@ DATA_NAME="mydata_hues_val_causal_firstcontent"  # include mention to test/val/t
 DIR_DATA="/cluster/work/grlab/projects/projects2022-identifiability/$DATA_NAME"
 DIR_ZIP="/cluster/work/grlab/projects/projects2022-identifiability/"
 N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000
+ENV=offlineRL
 #####################################################################
 
 N_BATCHES=10
 mkdir -p ${DIR_DATA}
 
 source ${CONDA_PATH}
-conda activate kugelen
+conda activate ${ENV}
 
 cd ${SCRIPT_DIR}
 
