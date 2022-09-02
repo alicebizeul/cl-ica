@@ -7,7 +7,6 @@
 #SBATCH --mem-per-cpu=10G
 #SBATCH -A grlab
 
-
 DIR_EXPERIMENT="$PWD/runs/tmp"  # NOTE: experiment logs are written here
 
 
