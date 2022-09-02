@@ -13,8 +13,7 @@ source /cluster/home/abizeul/software/anaconda/etc/profile.d/conda.sh
 conda activate kugelen
 
 cd /cluster/home/abizeul/cl-ica/tools/3dident
-DIR_DATA="/cluster/work/vogtlab/Group/abizeul/mydata_hues"
-
+DIR_DATA="/cluster/home/abizeul/mydata_hues"
 
 python generate_clevr_dataset_latents.py --output-folder ${DIR_DATA} --n-points 250000 --non-periodic-rotation-and-color --deterministic --all-hues --multimodal
 /cluster/home/abizeul/software/blender-2.90.1-linux64/blender -noaudio --background --python generate_clevr_dataset_images.py --use-gpu --output-folder ${DIR_DATA} --n-batches 10 --batch-index 0 --material-names "MyMetal" --no_range_change
@@ -28,6 +27,6 @@ python generate_clevr_dataset_latents.py --output-folder ${DIR_DATA} --n-points 
 /cluster/home/abizeul/software/blender-2.90.1-linux64/blender -noaudio --background --python generate_clevr_dataset_images.py --use-gpu --output-folder ${DIR_DATA} --n-batches 10 --batch-index 8 --material-names "Rubber" --no_range_change
 /cluster/home/abizeul/software/blender-2.90.1-linux64/blender -noaudio --background --python generate_clevr_dataset_images.py --use-gpu --output-folder ${DIR_DATA} --n-batches 10 --batch-index 9 --material-names "Rubber" --no_range_change
 
-zip -r "/cluster/work/vogtlab/Group/abizeul/mydata_hues.zip" "/cluster/work/vogtlab/Group/abizeul/mydata_hues"
-mv "/cluster/work/vogtlab/Group/abizeul/mydata_hues.zip" "/cluster/work/vogtlab/Group/abizeul/mydata_multimodal_texture_hues_train.zip"
+zip -r "/cluster/home/abizeul/mydata_hues.zip" "/cluster/home/abizeul/mydata_hues"
+mv "/cluster/home/abizeul/mydata_hues.zip" "/cluster/home/abizeul/mydata_multimodal_texture_hues_train.zip"
 
