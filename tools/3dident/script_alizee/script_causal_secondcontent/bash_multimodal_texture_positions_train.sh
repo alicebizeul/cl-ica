@@ -1,6 +1,6 @@
 #!/bin/bash 
 #SBATCH -o /cluster/work/grlab/projects/projects2022-identifiability/multimodal_texture_positions_train_causal.out
-#SBATCH --time=4:00:00
+#SBATCH --time=60:00:00
 #SBATCH -p gpu
 #SBATCH --gres=gpu:rtx2080ti:1
 #SBATCH --cpus-per-task=4
