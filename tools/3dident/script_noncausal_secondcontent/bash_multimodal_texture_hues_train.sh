@@ -1,8 +1,8 @@
 #!/bin/bash 
 #SBATCH -o /cluster/work/vogtlab/Group/abizeul/multimodal_texture_hues_train.out
-#SBATCH --time=60:00:00
+#SBATCH --time=80:00:00
 #SBATCH -p gpu
-#SBATCH --gres=gpu:v100:1
+#SBATCH --gres=gpu:rtx2080ti:1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=10G
 
