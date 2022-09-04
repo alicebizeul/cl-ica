@@ -1,6 +1,6 @@
 #!/bin/bash 
 #SBATCH -o /cluster/work/grlab/projects/projects2022-identifiability/multimodal_texture_positions_train_causal.out
-#SBATCH --time=60:00:00
+#SBATCH --time=40:00:00
 #SBATCH -p gpu
 #SBATCH --gres=gpu:rtx2080ti:1
 #SBATCH --cpus-per-task=4
@@ -23,15 +23,15 @@ ENV=offlineRL
 #####################################################################
 
 N_BATCHES=10
-mkdir -p ${DIR_DATA}
+#mkdir -p ${DIR_DATA}
 
 source ${CONDA_PATH}
 conda activate ${ENV}
 
 cd ${SCRIPT_DIR}
 
-python generate_clevr_dataset_latents_causal.py --output-folder ${DIR_DATA} --n-points ${N_POINTS} --non-periodic-rotation-and-color --deterministic --all-positions --multimodal
-for (( i=0; i<=$N_BATCHES; i++ ))
+#python generate_clevr_dataset_latents_causal.py --output-folder ${DIR_DATA} --n-points ${N_POINTS} --non-periodic-rotation-and-color --deterministic --all-positions --multimodal
+for (( i=8; i<=$N_BATCHES; i++ ))
 do
     MATERIAL="MyMetal"
     if [[ $i -ge 5 ]] 
