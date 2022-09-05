@@ -24,8 +24,8 @@ conda activate alice
 
 cd ${SCRIPT_DIR}
 
-python generate_clevr_dataset_latents.py --output-folder ${DIR_DATA} --n-points ${N_POINTS} --non-periodic-rotation-and-color --deterministic --all-hues --multimodal
-for (( i=0; i<=$N_BATCHES; i++ ))
+#python generate_clevr_dataset_latents.py --output-folder ${DIR_DATA} --n-points ${N_POINTS} --non-periodic-rotation-and-color --deterministic --all-hues --multimodal
+for (( i=6; i<=$N_BATCHES; i++ ))
 do
     MATERIAL="MyMetal"
     if [[ $i -ge 5 ]] 
