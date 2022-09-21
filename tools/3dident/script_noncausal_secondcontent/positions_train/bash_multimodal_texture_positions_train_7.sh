@@ -21,7 +21,7 @@ N_BATCHES=10
 mkdir -p ${DIR_DATA}
 
 source ${CONDA_PATH}
-conda activate alice
+conda activate kugelen
 
 cd ${SCRIPT_DIR}
 
