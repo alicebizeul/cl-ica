@@ -30,7 +30,7 @@ conda activate ${ENV}
 cd ${SCRIPT_DIR}
 
 #python generate_clevr_dataset_latents_causal.py --output-folder ${DIR_DATA} --n-points ${N_POINTS} --non-periodic-rotation-and-color --deterministic --all-positions --multimodal --first_content
-for (( i=9; i<$N_BATCHES; i++ ))
+for (( i=0; i<$N_BATCHES; i++ ))
 do
     MATERIAL="MyMetal"
     if [[ $i -ge 5 ]] 
