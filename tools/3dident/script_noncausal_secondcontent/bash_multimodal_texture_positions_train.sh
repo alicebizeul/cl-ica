@@ -12,7 +12,7 @@ CONDA_PATH="/cluster/home/abizeul/software/anaconda/etc/profile.d/conda.sh"
 SCRIPT_DIR=/cluster/home/abizeul/alice-clica/cl-ica/tools/3dident
 BLENDER_DIR=/cluster/home/abizeul/software/blender-2.90.1-linux64/blender
 DATA_NAME="mydata_multimodal_texture_positions/3dident/train"  # include mention to test/val/train, MS and C/S settings
-DIR_DATA="/cluster/home/abizeul/$DATA_NAME"
+DIR_DATA="/cluster/work/vogtlab/Group/abizeul/$DATA_NAME"
 N_POINTS=200000  # if test/validation fix this to 10 000, for train fix this to 250 000
 #####################################################################
 
