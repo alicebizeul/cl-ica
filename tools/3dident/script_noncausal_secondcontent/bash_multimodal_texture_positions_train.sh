@@ -1,9 +1,10 @@
 #!/bin/bash 
-#SBATCH -oo /cluster/work/vogtlab/Group/abizeul/multimodal_texture_positions_train.out
+#SBATCH -o /cluster/work/vogtlab/Group/abizeul/multimodal_texture_positions_train.out
 #SBATCH -p gpu
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=10G
+#SBATCH --time=60:00:00
 
 DIR_EXPERIMENT="$PWD/runs/tmp"  # NOTE: experiment logs are written here
 
