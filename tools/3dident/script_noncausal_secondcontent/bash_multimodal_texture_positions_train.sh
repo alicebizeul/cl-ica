@@ -26,13 +26,14 @@ conda activate alice
 cd ${SCRIPT_DIR}
 
 #python generate_clevr_dataset_latents.py --output-folder ${DIR_DATA} --n-points ${N_POINTS} --non-periodic-rotation-and-color --deterministic --all-positions --multimodal
-i=9
-MATERIAL="MyMetal"
-if [[ $i -ge 5 ]] 
-then
-    MATERIAL="Rubber"
-fi
-echo $MATERIAL
+for (( i=0; i<=$N_BATCHES; i++ ))
+do
+    MATERIAL="MyMetal"
+    if [[ $i -ge 5 ]] 
+    then
+        MATERIAL="Rubber"
+    fi
+    echo $MATERIAL
 
-${BLENDER_DIR} -noaudio --background --python generate_clevr_dataset_images.py --use-gpu --output-folder ${DIR_DATA} --n-batches 10 --batch-index ${i} --material-names ${MATERIAL} --no_range_change
-
+    ${BLENDER_DIR} -noaudio --background --python generate_clevr_dataset_images.py --use-gpu --output-folder ${DIR_DATA} --n-batches 10 --batch-index ${i} --material-names ${MATERIAL} --no_range_change
+done
