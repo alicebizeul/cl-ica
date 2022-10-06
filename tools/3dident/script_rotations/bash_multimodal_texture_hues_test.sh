@@ -18,7 +18,7 @@ BLENDER_DIR=/cluster/home/abizeul/software/blender-2.90.1-linux64/blender
 #j=$(expr $SLURM_ARRAY_TASK_ID % 10)
 #object=$(expr $SLURM_ARRAY_TASK_ID / 10)
 j=$SLURM_ARRAY_TASK_ID
-object=5
+object=4
 for (( i=0; i<3; i++ ))
 do
     if [[ $object -eq 0 ]]
