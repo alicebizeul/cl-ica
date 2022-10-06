@@ -27,8 +27,8 @@ def main(args):
     if args.shape_names is None:
         args.shape_names = ["Teapot"] * ((latents.shape[1] - 1) // 8)
     else:
-        print(args.shape_names)
-        args.shape_names = [args.shape_names] * ((latents.shape[1] - 1) // 8)
+        print(args.shape_namesi)
+        args.shape_names = args.shape_names * ((latents.shape[1] - 1) // 8)
     if len(args.material_names) == 1:
         args.material_names = args.material_names * ((latents.shape[1] - 1) // 8)
 
