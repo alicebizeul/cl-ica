@@ -76,7 +76,8 @@ do
     conda activate kugelen
 
     cd ${SCRIPT_DIR}
-
+    echo $i
+    echo $j
     if [[ $j -eq 0 ]] 
     then
         python generate_clevr_dataset_latents.py --output-folder ${DIR_DATA} --n-points ${N_POINTS} --non-periodic-rotation-and-color --deterministic --all-hues --multimodal
