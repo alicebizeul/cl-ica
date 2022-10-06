@@ -12,7 +12,7 @@ DIR_EXPERIMENT="$PWD/runs/tmp"  # NOTE: experiment logs are written here
 ############# PLEASE CHANGE THE FOLLOWING PARAMETERS ###############
 LD_LIBRARY_PATH="/cluster/home/abizeul/software/anaconda/envs/kugelen/lib/:$LD_LIBRARY_PATH"
 CONDA_PATH=/cluster/home/abizeul/software/anaconda/etc/profile.d/conda.sh 
-SCRIPT_DIR=/cluster/home/abizeul/cl-ica/tools/3dident
+SCRIPT_DIR=/cluster/home/abizeul/alice_dev/cl-ica/tools/3dident
 BLENDER_DIR=/cluster/home/abizeul/software/blender-2.90.1-linux64/blender
 #####################################################################
 #j=$(expr $SLURM_ARRAY_TASK_ID % 10)
