@@ -27,6 +27,7 @@ def main(args):
     if args.shape_names is None:
         args.shape_names = ["Teapot"] * ((latents.shape[1] - 1) // 8)
     else:
+        print(args.shape_names)
         args.shape_names = [args.shape_names] * ((latents.shape[1] - 1) // 8)
     if len(args.material_names) == 1:
         args.material_names = args.material_names * ((latents.shape[1] - 1) // 8)
@@ -93,7 +94,7 @@ def initialize_renderer(
     """Initialize renderer and base scene"""
 
     base_path = pathlib.Path(__file__).parent.absolute()
-
+    print("This is my basepath",base_path)
     # Load the main blendfile
     base_scene = os.path.join(base_path, "data", "scenes", "base_scene_equal_xyz.blend")
     bpy.ops.wm.open_mainfile(filepath=base_scene)
