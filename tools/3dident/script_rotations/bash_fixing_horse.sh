@@ -1,11 +1,11 @@
 #!/bin/bash 
-#SBATCH -o /cluster/work/vogtlab/Group/abizeul/cow_rotations.out
+#SBATCH -o /cluster/work/vogtlab/Group/abizeul/horse_rotations.out
 #SBATCH --time=24:00:00
 #SBATCH -p gpu
 #SBATCH --gres=gpu:rtx2080ti:1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=10G
-#SBATCH --array=0
+#SBATCH --array=0-10
 
 DIR_EXPERIMENT="$PWD/runs/tmp"  # NOTE: experiment logs are written here
 
@@ -18,7 +18,7 @@ BLENDER_DIR=/cluster/home/abizeul/software/blender-2.90.1-linux64/blender
 #j=$(expr $SLURM_ARRAY_TASK_ID % 10)
 #object=$(expr $SLURM_ARRAY_TASK_ID / 10)
 j=$SLURM_ARRAY_TASK_ID
-object=4
+object=6
 for (( i=0; i<3; i++ ))
 do
     if [[ $object -eq 0 ]]
