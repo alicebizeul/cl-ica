@@ -21,49 +21,49 @@ j=$SLURM_ARRAY_TASK_ID
 object=1
 for (( i=0; i<3; i++ ))
 do
-    if [[$object -eq 0]]
+    if [[ $object -eq 0 ]]
     then
         OBJECT="Teapot"
     fi 
-    if [[$object -eq 1]]
+    if [[ $object -eq 1 ]]
     then
         OBJECT="Cow"
     fi 
-    if [[$object -eq 2]]
+    if [[ $object -eq 2 ]]
     then
         OBJECT="Head"
     fi 
-    if [[$object -eq 3]]
+    if [[ $object -eq 3 ]]
     then
         OBJECT="Dragon"
     fi 
-    if [[$object -eq 4]]
+    if [[ $object -eq 4 ]]
     then
         OBJECT="Armardillo"
     fi 
-    if [[$object -eq 5]]
+    if [[ $object -eq 5 ]]
     then
         OBJECT="Bunny"
     fi 
-    if [[$object -eq 6]]
+    if [[ $object -eq 6 ]]
     then
         OBJECT="Horse"
     fi 
     DATA_NAME="mydata_fixing_rotation_$OBJECT"
 
-    if [[$i -eq 0]]
+    if [[ $i -eq 0 ]]
     then
         DIR_DATA="/cluster/work/vogtlab/Group/abizeul/$DATA_NAME/train"
         N_POINTS=200000  # if test/validation fix this to 10 000, for train fix this to 250 000  
     fi
 
-    if [[$i -eq 1]]
+    if [[ $i -eq 1 ]]
     then
         DIR_DATA="/cluster/work/vogtlab/Group/abizeul/$DATA_NAME/test"
         N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000  
     fi
 
-    if [[$i -eq 2]]
+    if [[ $i -eq 2 ]]
     then
         DIR_DATA="/cluster/work/vogtlab/Group/abizeul/$DATA_NAME/validation"
         N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000  
