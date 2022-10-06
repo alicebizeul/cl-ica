@@ -26,6 +26,8 @@ def main(args):
         args.material_names = ["Rubber"] * ((latents.shape[1] - 1) // 8)
     if args.shape_names is None:
         args.shape_names = ["Teapot"] * ((latents.shape[1] - 1) // 8)
+    else:
+        args.shape_names = [args.shape_names] * ((latents.shape[1] - 1) // 8)
     if len(args.material_names) == 1:
         args.material_names = args.material_names * ((latents.shape[1] - 1) // 8)
 
