@@ -110,5 +110,7 @@ do
 done
 
 zip -r "${ROOT_FOLDER}.zip" ${ROOT_FOLDER}
-scp "${ROOT_FOLDER}.zip" "/cluster/work/vogtlab/Group/abizeul/${DATA_NAME}.zip"
+mv "${ROOT_FOLDER}.zip" "/cluster/work/vogtlab/Group/abizeul/${DATA_NAME}.zip"
+
+rm -r ${ROOT_FOLDER}
 
