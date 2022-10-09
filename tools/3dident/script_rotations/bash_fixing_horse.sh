@@ -61,6 +61,7 @@ do
     if [[ $i -eq 0 ]]
     then
         DIR_DATA="${ROOT_FOLDER}/train"
+        mkdir -p ${DIR_DATA}
         N_POINTS=200000  # if test/validation fix this to 10 000, for train fix this to 250 000  
         scp "${UNZIPPED_FOLDER}/train/raw_latents.npy" "${ROOT_FOLDER}/raw_latents.npy"
         scp "${UNZIPPED_FOLDER}/train/latents.npy" "${ROOT_FOLDER}/latents.npy"
@@ -69,6 +70,7 @@ do
     if [[ $i -eq 1 ]]
     then
         DIR_DATA="${ROOT_FOLDER}/test"
+        mkdir -p ${DIR_DATA}
         N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000  
         scp "${UNZIPPED_FOLDER}/test/raw_latents.npy" "${ROOT_FOLDER}/raw_latents.npy"
         scp "${UNZIPPED_FOLDER}/test/latents.npy" "${ROOT_FOLDER}/latents.npy"
@@ -77,13 +79,13 @@ do
     if [[ $i -eq 2 ]]
     then
         DIR_DATA="${ROOT_FOLDER}/validation"
+        mkdir -p ${DIR_DATA}
         N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000  
         scp "${UNZIPPED_FOLDER}/validation/raw_latents.npy" "${ROOT_FOLDER}/raw_latents.npy"
         scp "${UNZIPPED_FOLDER}/validation/latents.npy" "${ROOT_FOLDER}/latents.npy"
     fi
 
     N_BATCHES=10
-    mkdir -p ${DIR_DATA}
 
     source ${CONDA_PATH}
     conda activate kugelen
