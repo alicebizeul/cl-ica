@@ -1,20 +1,25 @@
 #!/bin/bash 
-#SBATCH -o /cluster/work/vogtlab/Group/abizeul/horse_rotations.out
-#SBATCH --time=24:00:00
+#SBATCH -o /cluster/work/vogtlab/Group/abizeul/newobject_rotations.out
+#SBATCH --time=120:00:00
 #SBATCH -p gpu
-#SBATCH --gres=gpu:rtx2080ti:1
+#SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=10G
 #SBATCH --array=0-10
+#SBATCH --exclude=gpu-biomed-[16-21]
 
 DIR_EXPERIMENT="$PWD/runs/tmp"  # NOTE: experiment logs are written here
 
 ############# PLEASE CHANGE THE FOLLOWING PARAMETERS ###############
+TMP=/scratch
 LD_LIBRARY_PATH="/cluster/home/abizeul/software/anaconda/envs/kugelen/lib/:$LD_LIBRARY_PATH"
 CONDA_PATH=/cluster/home/abizeul/software/anaconda/etc/profile.d/conda.sh 
 SCRIPT_DIR=/cluster/home/abizeul/alice-clica/cl-ica/tools/3dident
 BLENDER_DIR=/cluster/home/abizeul/software/blender-2.90.1-linux64/blender
 #####################################################################
+
+
+
 #j=$(expr $SLURM_ARRAY_TASK_ID % 10)
 #object=$(expr $SLURM_ARRAY_TASK_ID / 10)
 j=$SLURM_ARRAY_TASK_ID
@@ -50,27 +55,32 @@ do
         OBJECT="Horse"
     fi 
     DATA_NAME="mydata_fixing_rotation_$OBJECT"
+    ROOT_FOLDER="${TMP}/${DATA_NAME}"
+    UNZIPPED_FOLDER="/cluster/work/vogtlab/Group/abizeul/${DATA_NAME}"
 
     if [[ $i -eq 0 ]]
     then
-        DIR_DATA="/cluster/work/vogtlab/Group/abizeul/$DATA_NAME/train"
+        DIR_DATA="${ROOT_FOLDER}/train"
         N_POINTS=200000  # if test/validation fix this to 10 000, for train fix this to 250 000  
     fi
 
     if [[ $i -eq 1 ]]
     then
-        DIR_DATA="/cluster/work/vogtlab/Group/abizeul/$DATA_NAME/test"
+        DIR_DATA="${ROOT_FOLDER}/test"
         N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000  
     fi
 
     if [[ $i -eq 2 ]]
     then
-        DIR_DATA="/cluster/work/vogtlab/Group/abizeul/$DATA_NAME/validation"
+        DIR_DATA="${ROOT_FOLDER}/validation"
         N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000  
     fi
 
     N_BATCHES=10
     mkdir -p ${DIR_DATA}
+
+    scp "${UNZIPPED_FOLDER}/raw_latents.npy" "${ROOT_FOLDER}/raw_latents.npy"
+    scp "${UNZIPPED_FOLDER}/latents.npy" "${ROOT_FOLDER}/latents.npy"
 
     source ${CONDA_PATH}
     conda activate kugelen
@@ -94,6 +104,6 @@ do
 
 done
 
-#zip -r "$DIR_DATA.zip" ${DIR_DATA}
-#scp "$DIR_DATA.zip" "${DIR_ZIP}/${DATA_NAME}.zip"
+zip -r "${ROOT_FOLDER}.zip" ${ROOT_FOLDER}
+scp "${ROOT_FOLDER}.zip" "/cluster/work/vogtlab/Group/abizeul/${DATA_NAME}.zip"
 
