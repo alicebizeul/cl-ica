@@ -1,5 +1,4 @@
 #!/bin/bash 
-#SBATCH -o /cluster/work/vogtlab/Group/abizeul/newobject_rotations_{$SLURM_ARRAY_TASK_ID}.out
 #SBATCH --time=120:00:00
 #SBATCH -p gpu
 #SBATCH --gres=gpu:1
@@ -7,6 +6,8 @@
 #SBATCH --mem-per-cpu=10G
 #SBATCH --array=0-10
 #SBATCH --exclude=gpu-biomed-[16-21]
+#SBATCH -o /cluster/work/vogtlab/Group/abizeul/newobject_rotations_${SLURM_ARRAY_TASK_ID}.out
+
 
 DIR_EXPERIMENT="$PWD/runs/tmp"  # NOTE: experiment logs are written here
 
@@ -63,7 +64,7 @@ do
         DIR_DATA="${ROOT_FOLDER}/train"
         mkdir -p ${DIR_DATA}
         N_POINTS=200000  # if test/validation fix this to 10 000, for train fix this to 250 000  
-        if [[ ! -f <file> ]]
+        if [[ ! -f "${ROOT_FOLDER}/train/raw_latents.npy" ]]
         then
             scp "${UNZIPPED_FOLDER}/train/raw_latents.npy" "${ROOT_FOLDER}/train/raw_latents.npy"
             scp "${UNZIPPED_FOLDER}/train/latents.npy" "${ROOT_FOLDER}/train/latents.npy"
@@ -75,7 +76,7 @@ do
         DIR_DATA="${ROOT_FOLDER}/test"
         mkdir -p ${DIR_DATA}
         N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000  
-        if [[ ! -f <file> ]]
+        if [[ ! -f "${ROOT_FOLDER}/test/raw_latents.npy" ]]
         then
             scp "${UNZIPPED_FOLDER}/test/raw_latents.npy" "${ROOT_FOLDER}/test/raw_latents.npy"
             scp "${UNZIPPED_FOLDER}/test/latents.npy" "${ROOT_FOLDER}/test/latents.npy"
@@ -87,7 +88,7 @@ do
         DIR_DATA="${ROOT_FOLDER}/validation"
         mkdir -p ${DIR_DATA}
         N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000 
-        if [[ ! -f <file> ]]
+        if [[ ! -f "${ROOT_FOLDER}/validation/raw_latents.npy" ]]
         then 
             scp "${UNZIPPED_FOLDER}/validation/raw_latents.npy" "${ROOT_FOLDER}/validation/raw_latents.npy"
             scp "${UNZIPPED_FOLDER}/validation/latents.npy" "${ROOT_FOLDER}/validation/latents.npy"
