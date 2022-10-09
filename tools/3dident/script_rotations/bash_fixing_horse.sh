@@ -124,6 +124,10 @@ done
 zip -r "${ROOT_FOLDER}.zip" ${ROOT_FOLDER}
 scp "${ROOT_FOLDER}.zip" "/cluster/work/vogtlab/Group/abizeul/${DATA_NAME}.zip"
 
+ls ${ROOT_FOLDER}/train/images/ | wc -l 
+ls ${ROOT_FOLDER}/test/images/ | wc -l 
+ls ${ROOT_FOLDER}/validation/images/ | wc -l 
+
 #rm -r ${ROOT_FOLDER}
 #rm "${ROOT_FOLDER}.zip"
 
