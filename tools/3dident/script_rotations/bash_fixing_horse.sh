@@ -1,5 +1,5 @@
 #!/bin/bash 
-#SBATCH -o /cluster/work/vogtlab/Group/abizeul/newobject_rotations.out
+#SBATCH -o /cluster/work/vogtlab/Group/abizeul/newobject_rotations_{$SLURM_ARRAY_TASK_ID}.out
 #SBATCH --time=120:00:00
 #SBATCH -p gpu
 #SBATCH --gres=gpu:1
@@ -63,8 +63,11 @@ do
         DIR_DATA="${ROOT_FOLDER}/train"
         mkdir -p ${DIR_DATA}
         N_POINTS=200000  # if test/validation fix this to 10 000, for train fix this to 250 000  
-        scp "${UNZIPPED_FOLDER}/train/raw_latents.npy" "${ROOT_FOLDER}/train/raw_latents.npy"
-        scp "${UNZIPPED_FOLDER}/train/latents.npy" "${ROOT_FOLDER}/train/latents.npy"
+        if [[ ! -f <file> ]]
+        then
+            scp "${UNZIPPED_FOLDER}/train/raw_latents.npy" "${ROOT_FOLDER}/train/raw_latents.npy"
+            scp "${UNZIPPED_FOLDER}/train/latents.npy" "${ROOT_FOLDER}/train/latents.npy"
+        fi
     fi
 
     if [[ $i -eq 1 ]]
@@ -72,18 +75,25 @@ do
         DIR_DATA="${ROOT_FOLDER}/test"
         mkdir -p ${DIR_DATA}
         N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000  
-        scp "${UNZIPPED_FOLDER}/test/raw_latents.npy" "${ROOT_FOLDER}/test/raw_latents.npy"
-        scp "${UNZIPPED_FOLDER}/test/latents.npy" "${ROOT_FOLDER}/test/latents.npy"
+        if [[ ! -f <file> ]]
+        then
+            scp "${UNZIPPED_FOLDER}/test/raw_latents.npy" "${ROOT_FOLDER}/test/raw_latents.npy"
+            scp "${UNZIPPED_FOLDER}/test/latents.npy" "${ROOT_FOLDER}/test/latents.npy"
+        fi
     fi
 
     if [[ $i -eq 2 ]]
     then
         DIR_DATA="${ROOT_FOLDER}/validation"
         mkdir -p ${DIR_DATA}
-        N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000  
-        scp "${UNZIPPED_FOLDER}/validation/raw_latents.npy" "${ROOT_FOLDER}/validation/raw_latents.npy"
-        scp "${UNZIPPED_FOLDER}/validation/latents.npy" "${ROOT_FOLDER}/validation/latents.npy"
+        N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000 
+        if [[ ! -f <file> ]]
+        then 
+            scp "${UNZIPPED_FOLDER}/validation/raw_latents.npy" "${ROOT_FOLDER}/validation/raw_latents.npy"
+            scp "${UNZIPPED_FOLDER}/validation/latents.npy" "${ROOT_FOLDER}/validation/latents.npy"
+        fi
     fi
+
 
     N_BATCHES=10
 
@@ -110,7 +120,8 @@ do
 done
 
 zip -r "${ROOT_FOLDER}.zip" ${ROOT_FOLDER}
-mv "${ROOT_FOLDER}.zip" "/cluster/work/vogtlab/Group/abizeul/${DATA_NAME}.zip"
+scp "${ROOT_FOLDER}.zip" "/cluster/work/vogtlab/Group/abizeul/${DATA_NAME}.zip"
 
 rm -r ${ROOT_FOLDER}
+rm "${ROOT_FOLDER}.zip"
 
