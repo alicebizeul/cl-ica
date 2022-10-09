@@ -63,8 +63,8 @@ do
         DIR_DATA="${ROOT_FOLDER}/train"
         mkdir -p ${DIR_DATA}
         N_POINTS=200000  # if test/validation fix this to 10 000, for train fix this to 250 000  
-        scp "${UNZIPPED_FOLDER}/train/raw_latents.npy" "${ROOT_FOLDER}/raw_latents.npy"
-        scp "${UNZIPPED_FOLDER}/train/latents.npy" "${ROOT_FOLDER}/latents.npy"
+        scp "${UNZIPPED_FOLDER}/train/raw_latents.npy" "${ROOT_FOLDER}/train/raw_latents.npy"
+        scp "${UNZIPPED_FOLDER}/train/latents.npy" "${ROOT_FOLDER}/train/latents.npy"
     fi
 
     if [[ $i -eq 1 ]]
@@ -72,8 +72,8 @@ do
         DIR_DATA="${ROOT_FOLDER}/test"
         mkdir -p ${DIR_DATA}
         N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000  
-        scp "${UNZIPPED_FOLDER}/test/raw_latents.npy" "${ROOT_FOLDER}/raw_latents.npy"
-        scp "${UNZIPPED_FOLDER}/test/latents.npy" "${ROOT_FOLDER}/latents.npy"
+        scp "${UNZIPPED_FOLDER}/test/raw_latents.npy" "${ROOT_FOLDER}/test/raw_latents.npy"
+        scp "${UNZIPPED_FOLDER}/test/latents.npy" "${ROOT_FOLDER}/test/latents.npy"
     fi
 
     if [[ $i -eq 2 ]]
@@ -81,8 +81,8 @@ do
         DIR_DATA="${ROOT_FOLDER}/validation"
         mkdir -p ${DIR_DATA}
         N_POINTS=10000  # if test/validation fix this to 10 000, for train fix this to 250 000  
-        scp "${UNZIPPED_FOLDER}/validation/raw_latents.npy" "${ROOT_FOLDER}/raw_latents.npy"
-        scp "${UNZIPPED_FOLDER}/validation/latents.npy" "${ROOT_FOLDER}/latents.npy"
+        scp "${UNZIPPED_FOLDER}/validation/raw_latents.npy" "${ROOT_FOLDER}/validation/raw_latents.npy"
+        scp "${UNZIPPED_FOLDER}/validation/latents.npy" "${ROOT_FOLDER}/validation/latents.npy"
     fi
 
     N_BATCHES=10
