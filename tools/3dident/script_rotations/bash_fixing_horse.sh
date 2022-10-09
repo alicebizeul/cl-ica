@@ -5,8 +5,9 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=10G
 #SBATCH --array=0-10
+#SBATCH -w gpu-biomed-09
 #SBATCH --exclude=gpu-biomed-[16-21]
-#SBATCH -o /cluster/work/vogtlab/Group/abizeul/newobject_rotations_${SLURM_ARRAY_TASK_ID}.out
+#SBATCH -o /cluster/work/vogtlab/Group/abizeul/newobject_rotations.out
 
 
 DIR_EXPERIMENT="$PWD/runs/tmp"  # NOTE: experiment logs are written here
@@ -96,7 +97,7 @@ do
     fi
 
 
-    N_BATCHES=10
+    N_BATCHES=8
 
     source ${CONDA_PATH}
     conda activate kugelen
@@ -123,6 +124,6 @@ done
 zip -r "${ROOT_FOLDER}.zip" ${ROOT_FOLDER}
 scp "${ROOT_FOLDER}.zip" "/cluster/work/vogtlab/Group/abizeul/${DATA_NAME}.zip"
 
-rm -r ${ROOT_FOLDER}
-rm "${ROOT_FOLDER}.zip"
+#rm -r ${ROOT_FOLDER}
+#rm "${ROOT_FOLDER}.zip"
 
