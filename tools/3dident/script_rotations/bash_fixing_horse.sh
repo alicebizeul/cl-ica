@@ -111,7 +111,7 @@ do
     #fi
 
     MATERIAL="MyMetal"
-    if [[ $j -ge 5 ]] 
+    if [[ $j -ge 4 ]] 
     then
         MATERIAL="Rubber"
     fi

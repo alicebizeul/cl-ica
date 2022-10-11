@@ -84,13 +84,13 @@ do
     #fi
 
     MATERIAL="MyMetal"
-    if [[ $j -ge 5 ]] 
+    if [[ $j -ge 4 ]] 
     then
         MATERIAL="Rubber"
     fi
     echo $MATERIAL
 
-    ${BLENDER_DIR} -noaudio --background --python generate_clevr_dataset_images.py --use-gpu --output-folder ${DIR_DATA} --n-batches 10 --batch-index ${j} --material-names ${MATERIAL} --no_range_change --shape-names ${OBJECT}
+    ${BLENDER_DIR} -noaudio --background --python generate_clevr_dataset_images.py --use-gpu --output-folder ${DIR_DATA} --n-batches 10 --batch-index ${j} --material-names ${MATERIAL} --no_range_change
 
 done
 
