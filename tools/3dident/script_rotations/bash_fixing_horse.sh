@@ -5,12 +5,13 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=10G
 #SBATCH --array=0-10
-#SBATCH -w gpu-biomed-17
+#SBATCH -w gpu-biomed-06
+
 #SBATCH -o /cluster/work/vogtlab/Group/abizeul/newobject_rotations.out
 
 
 DIR_EXPERIMENT="$PWD/runs/tmp"  # NOTE: experiment logs are written here
-
+# #SBATCH --exclude=gpu-biomed-[16-21]
 ############# PLEASE CHANGE THE FOLLOWING PARAMETERS ###############
 TMP=/scratch
 LD_LIBRARY_PATH="/cluster/home/abizeul/software/anaconda/envs/kugelen/lib/:$LD_LIBRARY_PATH"
