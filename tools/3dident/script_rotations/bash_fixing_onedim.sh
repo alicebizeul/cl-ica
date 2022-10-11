@@ -1,13 +1,14 @@
 #!/bin/bash 
+#SBATCH -o /cluster/work/vogtlab/Group/abizeul/onedim_rotations.out
 #SBATCH --time=120:00:00
 #SBATCH -p gpu
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=10G
 #SBATCH --array=0-10
-#SBATCH -w gpu-biomed-06
+#SBATCH -w gpu-biomed-15
 
-#SBATCH -o /cluster/work/vogtlab/Group/abizeul/newobject_rotations.out
+
 
 
 DIR_EXPERIMENT="$PWD/runs/tmp"  # NOTE: experiment logs are written here
