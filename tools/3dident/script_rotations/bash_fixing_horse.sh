@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=10G
 #SBATCH --array=0-10
-#SBATCH -w gpu-biomed-09
+#SBATCH -w gpu-biomed-17
 #SBATCH -o /cluster/work/vogtlab/Group/abizeul/newobject_rotations.out
 
 
