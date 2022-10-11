@@ -6,7 +6,6 @@
 #SBATCH --mem-per-cpu=10G
 #SBATCH --array=0-10
 #SBATCH -w gpu-biomed-09
-#SBATCH --exclude=gpu-biomed-[16-21]
 #SBATCH -o /cluster/work/vogtlab/Group/abizeul/newobject_rotations.out
 
 
