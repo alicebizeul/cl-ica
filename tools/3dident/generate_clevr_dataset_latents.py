@@ -30,6 +30,7 @@ def main():
     parser.add_argument("--all-rotations", action="store_true")
     parser.add_argument("--debug",action="store_true")
     parser.add_argument("--debug2",action="store_true")
+    parser.add_argument("--debug3",action="store_true")
     parser.add_argument("--first_content", action="store_true")
 
     args = parser.parse_args()
@@ -371,7 +372,89 @@ def main():
                     ]
                 )
 
-        elif args.debug:
+        elif args.debug:  # spotlight limited
+
+            s = latent_spaces.ProductLatentSpace(
+                    [
+                        # Positions 
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1),
+                            lambda space, size, device: space.delta(size, device=device),
+                            lambda space, mean, std, size, device: space.delta(size, device=device),
+                        ),
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1),
+                            lambda space, size, device: space.delta(size, device=device),
+                            lambda space, mean, std, size, device: space.uniform(size, device),
+                        ),                    
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1),
+                            lambda space, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.delta(size, device=device),
+                        ),
+                        # Rotations
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1),
+                            lambda space, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.normal(mean, std, size, device),
+                        ),                        
+                        ##### rotation angle fixed here
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1),
+                            lambda space, size, device: space.delta(size, device=device),
+                            lambda space, mean, std, size, device: space.delta(size, device=device),
+                        ),
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1),
+                            lambda space, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.normal(mean, std, size, device),
+                        ),
+                        # spotlight position
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1,-1,0),
+                            lambda space, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.normal(mean, std, size, device),
+                        ),
+                        # Hues
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(3),
+                            lambda space, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
+                        ),
+                    ]
+                )
+
+            # s = latent_spaces.ProductLatentSpace(
+            #     [
+            #         latent_spaces.LatentSpace(
+            #             spaces.NBoxSpace(3),
+            #             lambda space, size, device: space.uniform(size, device=device),
+            #             lambda space, mean, std, size, device: space.normal(mean, std, size, device),
+            #         ),
+            #         latent_spaces.LatentSpace(
+            #             spaces.NBoxSpace(n_non_angular_variables + n_angular_variables-3-3),
+            #             lambda space, size, device: space.uniform(size, device=device),
+            #             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
+            #         ),
+            #         latent_spaces.LatentSpace(
+            #             spaces.NBoxSpace(1),
+            #             lambda space, size, device: space.uniform(size, device=device),
+            #             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
+            #         ),
+            #         latent_spaces.LatentSpace(
+            #             spaces.NBoxSpace(1),
+            #             lambda space, size, device: space.uniform(size, device=device),
+            #             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
+            #         ),
+            #         latent_spaces.LatentSpace(
+            #             spaces.NBoxSpace(1),
+            #             lambda space, size, device: space.uniform(size, device=device),
+            #             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
+            #         ),
+            #     ]
+            # )
+
+        elif args.debug2:
 
             s = latent_spaces.ProductLatentSpace(
                     [
@@ -423,67 +506,57 @@ def main():
                     ]
                 )
 
-            # s = latent_spaces.ProductLatentSpace(
-            #     [
-            #         latent_spaces.LatentSpace(
-            #             spaces.NBoxSpace(3),
-            #             lambda space, size, device: space.uniform(size, device=device),
-            #             lambda space, mean, std, size, device: space.normal(mean, std, size, device),
-            #         ),
-            #         latent_spaces.LatentSpace(
-            #             spaces.NBoxSpace(n_non_angular_variables + n_angular_variables-3-3),
-            #             lambda space, size, device: space.uniform(size, device=device),
-            #             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
-            #         ),
-            #         latent_spaces.LatentSpace(
-            #             spaces.NBoxSpace(1),
-            #             lambda space, size, device: space.uniform(size, device=device),
-            #             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
-            #         ),
-            #         latent_spaces.LatentSpace(
-            #             spaces.NBoxSpace(1),
-            #             lambda space, size, device: space.uniform(size, device=device),
-            #             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
-            #         ),
-            #         latent_spaces.LatentSpace(
-            #             spaces.NBoxSpace(1),
-            #             lambda space, size, device: space.uniform(size, device=device),
-            #             lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
-            #         ),
-            #     ]
-            # )
-
-        elif args.debug2:
+        elif args.debug3:
 
             s = latent_spaces.ProductLatentSpace(
-                [
-                    latent_spaces.LatentSpace(
-                        spaces.NBoxSpace(3),
-                        lambda space, size, device: space.uniform(size, device=device),
-                        lambda space, mean, std, size, device: space.normal(mean, std, size, device),
-                    ),
-                    latent_spaces.LatentSpace(
-                        spaces.NBoxSpace(n_non_angular_variables + n_angular_variables-3-3),
-                        lambda space, size, device: space.uniform(size, device=device),
-                        lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
-                    ),
-                    latent_spaces.LatentSpace(
-                        spaces.NBoxSpace(1),
-                        lambda space, size, device: space.delta(size, device=device),
-                        lambda space, mean, std, size, device: space.uniform(size, device=device),
-                    ),
-                    latent_spaces.LatentSpace(
-                        spaces.NBoxSpace(1),
-                        lambda space, size, device: space.uniform(size, device=device),
-                        lambda space, mean, std, size, device: space.normal(mean, std, size, device),
-                    ),
-                    latent_spaces.LatentSpace(
-                        spaces.NBoxSpace(1),
-                        lambda space, size, device: space.uniform(size, device=device),
-                        lambda space, mean, std, size, device: space.delta(size, device=device),
-                    ),
-                ]
-            )
+                    [
+                        # Positions 
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1),
+                            lambda space, size, device: space.delta(size, device=device),
+                            lambda space, mean, std, size, device: space.delta(size, device=device),
+                        ),
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1),
+                            lambda space, size, device: space.delta(size, device=device),
+                            lambda space, mean, std, size, device: space.uniform(size, device),
+                        ),                    
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1),
+                            lambda space, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.delta(size, device=device),
+                        ),
+                        # Rotations
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1,0,1),
+                            lambda space, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.normal(mean, std, size, device),
+                        ),                     
+                        ##### rotation angle fixed here
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1,-1,0),
+                            lambda space, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.normal(mean, std, size, device),
+                        ), 
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1),
+                            lambda space, size, device: space.delta(size, device=device),
+                            lambda space, mean, std, size, device: space.delta(size, device=device),
+                        ),
+                        # spotlight position
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(1),
+                            lambda space, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.normal(mean, std, size, device),
+                        ),
+                        # Hues
+                        latent_spaces.LatentSpace(
+                            spaces.NBoxSpace(3),
+                            lambda space, size, device: space.uniform(size, device=device),
+                            lambda space, mean, std, size, device: space.trunc_normal(mean, std, size, device),
+                        ),
+                    ]
+                )
             
 
 
@@ -571,13 +644,19 @@ def main():
 
         elif args.debug:
             raw_latents_view1 = s.sample_marginal(int(args.n_points/2), device="cpu")
-            raw_latents_view2 = s.sample_conditional(raw_latents_view1,[None,None,None,None,None,0.0,0.0,1.0], size=int(args.n_points/2), device="cpu").numpy()
+            raw_latents_view2 = s.sample_conditional(raw_latents_view1,[None,None,None,0.0,None,0.0,0.0,1.0], size=int(args.n_points/2), device="cpu").numpy()
             raw_latents_view1 = raw_latents_view1.numpy()
             raw_latents = np.append(raw_latents_view1,raw_latents_view2,0)
         
         elif args.debug2:
             raw_latents_view1 = s.sample_marginal(int(args.n_points/2), device="cpu")
-            raw_latents_view2 = s.sample_conditional(raw_latents_view1,[1.0,0.2,None,0.2,None], size=int(args.n_points/2), device="cpu").numpy()
+            raw_latents_view2 = s.sample_conditional(raw_latents_view1,[None,None,None,None,None,0.0,0.0,1.0], size=int(args.n_points/2), device="cpu").numpy()
+            raw_latents_view1 = raw_latents_view1.numpy()
+            raw_latents = np.append(raw_latents_view1,raw_latents_view2,0)
+
+        elif args.debug3: 
+            raw_latents_view1 = s.sample_marginal(int(args.n_points/2), device="cpu")
+            raw_latents_view2 = s.sample_conditional(raw_latents_view1,[None,None,None,0.0,0.0,None,0.0,1.0], size=int(args.n_points/2), device="cpu").numpy()
             raw_latents_view1 = raw_latents_view1.numpy()
             raw_latents = np.append(raw_latents_view1,raw_latents_view2,0)
          
@@ -619,6 +698,8 @@ def main():
                 np.save(os.path.join(args.output_folder, "raw_latents.npy"), raw_latents)
             elif args.debug2:
                 np.save(os.path.join(args.output_folder, "raw_latents.npy"), raw_latents)
+            elif args.debug3:
+                np.save(os.path.join(args.output_folder, "raw_latents.npy"), raw_latents)
             else:raise("Other data augmentations are not yet supported")
         else:np.save(os.path.join(args.output_folder, "raw_latents.npy"), raw_latents)
 
@@ -648,6 +729,7 @@ def main():
             elif args.all_rotations:np.save(os.path.join(args.output_folder, "raw_latents.npy"), raw_latents)
             elif args.debug: np.save(os.path.join(args.output_folder, "raw_latents.npy"), raw_latents)
             elif args.debug2: np.save(os.path.join(args.output_folder, "raw_latents.npy"), raw_latents)
+            elif args.debug3: np.save(os.path.join(args.output_folder, "raw_latents.npy"), raw_latents)
             else:raise("Other data augmentations are not yet supported")
         else:np.save(os.path.join(args.output_folder, "raw_latents.npy"), raw_latents)
 
@@ -686,6 +768,8 @@ def main():
         elif args.debug: 
             np.save(os.path.join(args.output_folder, "latents.npy"), reordered_latents)
         elif args.debug2: 
+            np.save(os.path.join(args.output_folder, "latents.npy"), reordered_latents)
+        elif args.debug3: 
             np.save(os.path.join(args.output_folder, "latents.npy"), reordered_latents)
         else:raise("Other data augmentations are not yet supported")
     else:np.save(os.path.join(args.output_folder, "latents.npy"), reordered_latents)
