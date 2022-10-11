@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=10G
 #SBATCH --array=0-10
-#SBATCH -w gpu-biomed-06
+#SBATCH -w gpu-biomed-09
 
 
 
